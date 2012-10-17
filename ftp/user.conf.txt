@@ -1,0 +1,11 @@
+#répertoire de base de l'admin
+local_root=/opt/FTP
+
+#droits d'écriture
+write_enable=yes
+
+#Autorisation d'uploader
+anon_upload_enable=yes
+
+#autorisation de créer des répertoires
+anon_mkdir_write_enable=no

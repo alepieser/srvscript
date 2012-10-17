@@ -1,0 +1,67 @@
+#Port d'écoute (on utilise le port SSL)
+listen_port=5121
+
+#Interdiction d'utiliser le port 20
+connect_from_port_20=no
+
+#bannière d'accueil du FTP
+ftpd_banner=Welcome to Nectiz FTP Server
+
+#fichier de config PAM
+pam_service_name=vsftpd
+
+#Mode standalone
+listen=yes
+
+#Connexions anonymes refusées
+anonymous_enable=no
+
+#Les users virtuels pourront mapper un compte local
+local_enable=yes
+
+#fichier des users interdits (ex: root)
+userlist_file=/etc/vsftpd/user_list
+
+#on charge la liste
+userlist_enable=yes
+
+#on refuse tous les comptes qu'elle contient
+userlist_deny=yes
+
+#les users virtuels seront mappés sur le compte local "ftp"
+guest_enable=yes
+guest_username=www-data
+nopriv_user=www-data
+
+#un user virtuel pourra télécharger des fichiers (on assure un minimum
+#de service en cas d'erreur de config)
+anon_world_readable_only=no
+
+#"emprisonnement" des users
+chroot_local_user=yes
+
+#nombre de connexions simultannées maximum
+max_clients=50
+
+#nombre maximum de connexion avec la même adresse IP
+max_per_ip=4
+
+#fichier de log
+xferlog_enable=yes
+
+#On autorise le SSL
+ssl_enable=yes
+
+#On force l'utilisation du SSL
+force_local_data_ssl=yes
+
+#on accepte les différentes versions d'SSL
+ssl_tlsv1=yes
+ssl_sslv2=yes
+ssl_sslv3=yes
+
+#Renseignement du certificat à utiliser
+rsa_cert_file=/etc/ssl/private/vsftpd.pem
+
+#Répertoire où se trouvent tous les fichiers de conf users
+user_config_dir=/etc/vsftpd/vsftpd_user_conf
