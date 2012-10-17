@@ -1,13 +1,19 @@
 #!/bin/sh
+#
+# Created by: Alexandre Servoz
+# Version: 1.0
 
+# Declartion of global vars
 url="https://raw.github.com/weilex/srvscript/master"
 txtrst=$(tput sgr0) 	 # Text reset
 txtred=$(tput setaf 1)   # Red
 txtgreen=$(tput setaf 2) # Green
 
+# Install NTP
 apt-get install ntp ntpdate
 echo -e "NTP installation\t ${txtgreen}[OK]${txtrst}"
 
+# Change ntp server
 cp /etc/ntp.conf /etc/ntp.conf.bck
 sed -i 's/server 0.debian/server 0.fr/g' /etc/ntp.conf
 sed -i 's/server 1.debian/server 1.fr/g' /etc/ntp.conf

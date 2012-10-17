@@ -1,5 +1,10 @@
-#!/bin/bash
+#!/bin/sh
+#
 # script to manage vsftp user
+# Created by: Alexandre Servoz
+#
+# Version: 1.0
+
 
 init_system() {
 	echo "Init virtual user for vsftpd "

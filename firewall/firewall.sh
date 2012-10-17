@@ -1,4 +1,7 @@
-#!/bin/bash
+#!/bin/sh
+#
+# Created by: Alexandre Servoz
+# Version: 1.0
 
 # Delete all existing rules
 iptables -F

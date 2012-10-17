@@ -1,30 +1,38 @@
 #!/bin/sh
+#
+# Created by: Alexandre Servoz
+# Version: 1.0
 
+# Declartion of global vars
 url="https://raw.github.com/weilex/srvscript/master"
 txtrst=$(tput sgr0) 	 # Text reset
 txtred=$(tput setaf 1)   # Red
 txtgreen=$(tput setaf 2) # Green
 
+# Install vsftpd and openssl
 apt-get install vsftpd openssl db4.8-util
 echo -e "FTP with TLS installation\t${txtgreen}[OK]${txtrst}"
 
+# Create a self ssl certificate (10year)
 mkdir -p /etc/ssl/private
 chmod 600 /etc/ssl/private
 openssl req -x509 -nodes -days 3650 -newkey rsa:1024 -keyout /etc/ssl/private/vsftpd.pem -out /etc/ssl/private/vsftpd.pem
 echo -e "Key ssl generated\t${txtgreen}[OK]${txtrst}"
 
+# Configure vsftpd
 cp /etc/vsftpd.conf /etc/vsftpd.conf.bck
 wget -q $(url)/ftp/vsftpd.conf --no-check-certificate
-if [ $? -ne 0 ]
-then echo -e "Download vsftpd config\t${txtred}[ERROR]${txtrst}"
+if [ $? -ne 0 ]; then 
+	echo -e "Download vsftpd config\t${txtred}[ERROR]${txtrst}"
 else
 	mv vsftpd.conf /etc/vsftpd.conf
 	echo -e "Default vsftpd configuration\t${txtgreen}[OK]${txtrst}"
 fi
 
+# Init vsftpd to use virtual user
 wget -q $(url)/ftp/vsftpdcmd.sh --no-check-certificate
-if [ $? -ne 0 ]
-then echo -e "Download vsftpdcmd script\t${txtred}[ERROR]${txtrst}"
+if [ $? -ne 0 ]; then
+	echo -e "Download vsftpdcmd script\t${txtred}[ERROR]${txtrst}"
 else
 	mv vsftpdcmd.sh /etc/vsftpd/vsftpdcmd
 	chmod +x /etc/vsftpd/vsftpdcmd

@@ -1,10 +1,15 @@
 #!/bin/sh
+#
+# Created by: Alexandre Servoz
+# Version: 1.0
 
+# Declaration of global vars
 url="https://raw.github.com/weilex/srvscript/master"
 txtrst=$(tput sgr0) 	 # Text reset
 txtred=$(tput setaf 1)   # Red
 txtgreen=$(tput setaf 2) # Green
 
+# Install php extension for lamp configuration
 echo ' '
 read -p "Do you want install php lamp extension (y/n) : " choice
 echo ' '
@@ -19,6 +24,7 @@ if [ $choice = "y" ]; then
 	fi
 fi
 
+# Install php security
 echo ' '
 read -p "Do you want install php security (y/n) : " choice
 echo ' '
@@ -33,6 +39,7 @@ if [ $choice = "y" ]; then
 	fi
 fi
 
+# Configure php mbstring
 echo ' '
 read -p "Do you want install php mbstring config (y/n) : " choice
 echo ' '
@@ -47,6 +54,7 @@ if [ $choice = "y" ]; then
 	fi
 fi
 
+# Configure php timezone
 echo ' '
 read -p "Do you want install php timezone config (y/n) : " choice
 echo ' '

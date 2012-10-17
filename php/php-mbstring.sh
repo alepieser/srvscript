@@ -1,8 +1,9 @@
 #!/bin/sh
+#
+# Originally created by biapy.org
 
-url="https://raw.github.com/weilex/srvscript/master"
+# Declaration of global vars
 txtrst=$(tput sgr0) 	 # Text reset
-txtred=$(tput setaf 1)   # Red
 txtgreen=$(tput setaf 2) # Green
 
 if [ -d '/etc/php5/conf.d' ]; then

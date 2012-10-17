@@ -1,10 +1,15 @@
 #!/bin/sh
+#
+# Created by: Alexandre Servoz
+# Version: 1.0
 
+# Declartion of global vars
 url="https://raw.github.com/weilex/srvscript/master"
-txtrst=$(tput sgr0) 	 	# Text reset
-txtred=$(tput setaf 1)   	# Red
-txtgreen=$(tput setaf 2) 	# Green
+txtrst=$(tput sgr0) 	 # Text reset
+txtred=$(tput setaf 1)   # Red
+txtgreen=$(tput setaf 2) # Green
 
+# Install apache
 apt-get install apache2-mpm-prefork ssl-cert
 wget -q $(url)/apache/a2tool-install.sh --no-check-certificate
 if [ $? -ne 0 ]; then 
@@ -16,6 +21,7 @@ else
 fi
 echo -e "Apache server installation\t${txtgreen}[OK]${txtrst}"
 
+# Install ssh
 echo ' '
 read -p "Do you want install ssl (y/n) : " choice
 echo ' '
@@ -29,6 +35,7 @@ if [ $choice = "y" ]; then
 	echo -e "Firewall update to listen on 443\t${txtgreen}[OK]${txtrst}"
 fi
 
+# Enable rewrite module
 echo ' '
 read -p "Do you want activate rewrite module (y/n) : " choice
 echo ' '
@@ -38,6 +45,7 @@ if [ $choice = "y" ]; then
 	echo -e "Mode rewrite\t${txtgreen}[OK]${txtrst}"
 fi
 
+# Change apache port and open firewall port
 echo ' '
 read -p "Do you want change apache port (y/n) : " choice
 echo ' '
@@ -64,6 +72,7 @@ if [ $choice = "y" ]; then
 	fi
 fi
 
+# Open default apache port
 if [ $choice -nq "y" ]; then
 	iptables -t filter -A INPUT -i venet0 -p tcp --dport 80 -j ACCEPT
 	iptables -t filter -A OUTPUT -o venet0 -p tcp --dport 80 -j ACCEPT
@@ -71,6 +80,7 @@ if [ $choice -nq "y" ]; then
 	echo -e "Firewall update to listen on 80\t${txtgreen}[OK]${txtrst}"
 fi
 
+# Install php module
 echo ' '
 read -p "Do you want install php module (y/n) : " choice
 echo ' '

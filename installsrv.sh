@@ -1,10 +1,15 @@
-#! /bin/sh
+#!/bin/sh
+#
+# Created by: Alexandre Servoz
+# Version: 1.0
 
+# Declartion of global vars
 url="https://raw.github.com/weilex/srvscript/master"
 txtrst=$(tput sgr0) 	 # Text reset
 txtred=$(tput setaf 1)   # Red
 txtgreen=$(tput setaf 2) # Green
 
+# Quit script if a command has an error
 quitOnError() {
    if [ $? -gt 0 ]
    then
@@ -15,12 +20,14 @@ quitOnError() {
    fi
 }
 
+# Run script downloaded once
 runscript() {
 	chmod +x $1
 	sh $1
 	rm $1
 }
 
+# Enable firewall at server start up
 firewall_startup() {
 	wget -q $(url)/firewall/firewall-startup.sh --no-check-certificate
 	quitOnError "Download firewall-startup script"
@@ -100,8 +107,13 @@ lamp)
 	quitOnError "Download apache-prefork script"
 	runscript apache-prefork.sh
 ;;
+node)
+	wget -q $(url)/mysql/nodejs-install.sh --no-check-certificate
+	quitOnError "Download nodejs-install script"
+	runscript nodejs-install.sh	
+;;
 *)
-	echo "Usage: installsrv {shell|vim|apt|crapt|nobody|firewall|fwstartup|fail|rootkit|mail|lamp|ftp}"
+	echo "Usage: installsrv {shell|vim|apt|crapt|nobody|firewall|fwstartup|fail|rootkit|mail|lamp|ftp|node}"
 	exit 1
 esac
 

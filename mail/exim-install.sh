@@ -1,13 +1,19 @@
 #!/bin/sh
+#
+# Created by: Alexandre Servoz
+# Version: 1.0
 
+# Declartion of global vars
 url="https://raw.github.com/weilex/srvscript/master"
 txtrst=$(tput sgr0) 	 # Text reset
 txtred=$(tput setaf 1)   # Red
 txtgreen=$(tput setaf 2) # Green
 
+# Install exim
 apt-get install exim4 bsd-mailx
 echo -e "Mail server relay installation\t${txtgreen}[OK]${txtrst}"
 
+# Configure exim
 dpkg-reconfigure exim4-config
 cp /etc/exim4/passwd.client /etc/exim4/passwd.client.bck
 vim /etc/exim4/passwd.client

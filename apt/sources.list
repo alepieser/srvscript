@@ -1,3 +1,6 @@
+# Created by: Alexandre Servoz
+# Version: 1.0
+
 deb http://mirror.ovh.net/debian/ squeeze main contrib non-free
 deb-src http://mirror.ovh.net/debian/ squeeze main contrib non-free
 
