@@ -1,0 +1,4 @@
+srvscript
+=========
+
+Debian server script
