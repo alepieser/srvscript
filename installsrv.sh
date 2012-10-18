@@ -22,9 +22,13 @@ quitOnError() {
 
 # Run script downloaded once
 runscript() {
-	chmod +x $1
-	sh $1
-	rm $1
+	if [ -f $1 ]; then
+		chmod +x $1
+		sh $1
+		rm $1
+	else
+		echo -e "File $1 not found\t ${txtred}[ERROR]${txtrst}"
+	fi
 }
 
 # Enable firewall at server start up
