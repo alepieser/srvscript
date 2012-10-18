@@ -9,7 +9,7 @@ txtrst=$(tput sgr0) 	 # Text reset
 txtred=$(tput setaf 1)   # Red
 txtgreen=$(tput setaf 2) # Green
 
-wget -q $(url)/firewall/iptablessave.sh  --no-check-certificate
+wget -q $url/firewall/iptablessave.sh  --no-check-certificate
 if [ $? -ne 0 ]
 then echo -e "Download iptablessave script\t${txtred}[ERROR]${txtrst}"
 else
@@ -19,7 +19,7 @@ else
 	echo -e "Firewall rules saved on reboot\t${txtgreen}[OK]${txtrst}"
 fi
 
-wget -q $(url)/firewall/iptablesload.sh --no-check-certificate
+wget -q $url/firewall/iptablesload.sh --no-check-certificate
 if [ $? -ne 0 ]
 then echo -e "Download iptablesload script\t${txtred}[ERROR]${txtrst}"
 else

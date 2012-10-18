@@ -13,7 +13,7 @@ txtgreen=$(tput setaf 2) # Green
 cp /etc/apt/sources.list /etc/apt/sources.list.bck
 
 # Download the new version
-wget -q $(url)/apt/sources.list --no-check-certificate --output-document="/etc/apt/sources.list"
+wget -q $url/apt/sources.list --no-check-certificate --output-document="/etc/apt/sources.list"
 if [ $? -ne 0 ]; then 
 	echo -e "Update APT source: sources.list \t ${txtred}[ERROR]${txtrst}"
 fi

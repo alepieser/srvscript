@@ -21,7 +21,7 @@ echo -e "Key ssl generated\t${txtgreen}[OK]${txtrst}"
 
 # Configure vsftpd
 cp /etc/vsftpd.conf /etc/vsftpd.conf.bck
-wget -q $(url)/ftp/vsftpd.conf --no-check-certificate
+wget -q $url/ftp/vsftpd.conf --no-check-certificate
 if [ $? -ne 0 ]; then 
 	echo -e "Download vsftpd config\t${txtred}[ERROR]${txtrst}"
 else
@@ -30,7 +30,7 @@ else
 fi
 
 # Init vsftpd to use virtual user
-wget -q $(url)/ftp/vsftpdcmd.sh --no-check-certificate
+wget -q $url/ftp/vsftpdcmd.sh --no-check-certificate
 if [ $? -ne 0 ]; then
 	echo -e "Download vsftpdcmd script\t${txtred}[ERROR]${txtrst}"
 else

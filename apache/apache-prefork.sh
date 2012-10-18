@@ -11,7 +11,7 @@ txtgreen=$(tput setaf 2) # Green
 
 # Install apache
 apt-get install apache2-mpm-prefork ssl-cert
-wget -q $(url)/apache/a2tool-install.sh --no-check-certificate
+wget -q $url/apache/a2tool-install.sh --no-check-certificate
 if [ $? -ne 0 ]; then 
 	echo -e "Download a2tool-install script \t ${txtred}[ERROR]${txtrst}"
 else
@@ -85,7 +85,7 @@ echo ' '
 read -p "Do you want install php module (y/n) : " choice
 echo ' '
 if [ $choice = "y" ]; then
-	wget -q $(url)/php/php-apache-module.sh --no-check-certificate
+	wget -q $url/php/php-apache-module.sh --no-check-certificate
 	if [ $? -ne 0 ]; then 
 		echo -e "Download php-apache-module script \t ${txtred}[ERROR]${txtrst}"
 	else
@@ -97,7 +97,7 @@ if [ $choice = "y" ]; then
 		read -p "Do you want install php extra (y/n) : " choice
 		echo ' '
 		if [ $choice = "y" ]; then
-			wget -q $(url)/php/php-extra.sh --no-check-certificate
+			wget -q $url/php/php-extra.sh --no-check-certificate
 			if [ $? -ne 0 ]; then 
 				echo -e "Download php-extra script \t ${txtred}[ERROR]${txtrst}"
 			else

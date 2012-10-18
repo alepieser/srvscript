@@ -22,7 +22,7 @@ sed -i 's/# MAILTO="root"/MAILTO="$(email)"/g' /etc/cron-apt/config
 sed -i 's/# MAILON="error"/MAILON="upgrade"/g' /etc/cron-apt/config
 echo -e "Cron-APT configuration \t ${txtgreen}[OK]${txtrst}"
 
-wget -q $(url)/apt/security.sources.list --no-check-certificate
+wget -q $url/apt/security.sources.list --no-check-certificate
 if [ $? -ne 0 ]
 then echo -e "Download security source list\t ${txtred}[ERROR]${txtrst}"
 else 
@@ -31,7 +31,7 @@ else
 	echo -e "Apply security source list\t${txtgreen}[OK]${txtrst}"
 fi
 
-wget -q $(url)/cron-apt/cron_apt-update.sh
+wget -q $url/cron-apt/cron_apt-update.sh
 if [ $? -ne 0 ]
 then echo -e "Download cron_apt-update script\t ${txtred}[ERROR]${txtrst}"
 else

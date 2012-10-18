@@ -9,7 +9,7 @@ txtrst=$(tput sgr0) 	 # Text reset
 txtred=$(tput setaf 1)   # Red
 txtgreen=$(tput setaf 2) # Green
 
-wget -q $(url)/firewall/firewall.sh --no-check-certificate
+wget -q $url/firewall/firewall.sh --no-check-certificate
 if [ $? -ne 0 ]
 then echo -e "Download firewall script\t ${txtred}[ERROR]${txtrst}"
 else

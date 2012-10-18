@@ -14,7 +14,7 @@ echo ' '
 read -p "Do you want install php lamp extension (y/n) : " choice
 echo ' '
 if [ $choice = "y" ]; then
-	wget -q $(url)/php/php-extansion-lamp.sh --no-check-certificate
+	wget -q $url/php/php-extansion-lamp.sh --no-check-certificate
 	if [ $? -ne 0 ]; then 
 		echo -e "Download php-extansion-lamp script \t ${txtred}[ERROR]${txtrst}"
 	else
@@ -29,7 +29,7 @@ echo ' '
 read -p "Do you want install php security (y/n) : " choice
 echo ' '
 if [ $choice = "y" ]; then
-	wget -q $(url)/php/php-security.sh --no-check-certificate
+	wget -q $url/php/php-security.sh --no-check-certificate
 	if [ $? -ne 0 ]; then 
 		echo -e "Download php-security script \t ${txtred}[ERROR]${txtrst}"
 	else
@@ -44,7 +44,7 @@ echo ' '
 read -p "Do you want install php mbstring config (y/n) : " choice
 echo ' '
 if [ $choice = "y" ]; then
-	wget -q $(url)/php/php-mbstring.sh --no-check-certificate
+	wget -q $url/php/php-mbstring.sh --no-check-certificate
 	if [ $? -ne 0 ]; then 
 		echo -e "Download php-mbstring script \t ${txtred}[ERROR]${txtrst}"
 	else
@@ -59,7 +59,7 @@ echo ' '
 read -p "Do you want install php timezone config (y/n) : " choice
 echo ' '
 if [ $choice = "y" ]; then
-	wget -q $(url)/php/php-timezone.sh --no-check-certificate
+	wget -q $url/php/php-timezone.sh --no-check-certificate
 	if [ $? -ne 0 ]; then 
 		echo -e "Download php-timezone script \t ${txtred}[ERROR]${txtrst}"
 	else
