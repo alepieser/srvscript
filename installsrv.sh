@@ -39,7 +39,7 @@ firewall_startup() {
 }
 
 case "$1" in
-shell
+shell)
 	wget -q $url/bash/bash-update.sh --no-check-certificate
 	quitOnError "Download bash-update script"
 	runscript bash-update.sh
