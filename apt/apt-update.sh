@@ -30,7 +30,6 @@ echo -e "Update APT source \t ${txtgreen}[OK]${txtrst}"
 # Disable suggest package installation
 echo ' '
 read -p "Do you want disable suggest package (y/n) : " choice
-echo ' '
 if [ $choice = "y" ]; then
 	echo "APT::Install-Suggests "false";" > /etc/apt/apt.conf.d/nosuggests
 	echo -e "Reconfigure APT to exclude suggests package\t${txtgreen}[OK]${txtrst}"
@@ -39,7 +38,6 @@ fi
 # Disable recommends package installation
 echo ' '
 read -p "Do you want disable recommands package (y/n) : " choice
-echo ' '
 if [ $choice = "y" ]; then
 	echo "APT::Install-Recommends "false";" > /etc/apt/apt.conf.d/norecommends
 	echo -e "Reconfigure APT to exclude recommends package\t${txtgreen}[OK]${txtrst}"

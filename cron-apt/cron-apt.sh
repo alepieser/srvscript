@@ -14,11 +14,10 @@ echo "Cron-APT installation \t ${txtgreen}[OK]${txtrst}"
 
 echo ' '
 read -p "Enter e-mail to send upgrade: " email
-echo ' '
 cp /etc/cron-apt/config /etc/cron-apt/config.bck
 sed -i 's/# APTCOMMAND=\/usr\/bin\/apt-get/APTCOMMAND=\/usr\/bin\/apt-get/g' /etc/cron-apt/config
 sed -i 's/# MAIL="\/var\/log\/cron-apt\/mail"/MAIL="\/var\/log\/cron-apt\/mail"/g' /etc/cron-apt/config
-sed -i 's/# MAILTO="root"/MAILTO="$(email)"/g' /etc/cron-apt/config
+sed -i 's/# MAILTO="root"/MAILTO="'$email"/g' /etc/cron-apt/config
 sed -i 's/# MAILON="error"/MAILON="upgrade"/g' /etc/cron-apt/config
 echo -e "Cron-APT configuration \t ${txtgreen}[OK]${txtrst}"
 

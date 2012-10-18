@@ -15,5 +15,5 @@ sed -i 's/# eval/eval/g' /root/.bashrc
 sed -i 's/# alias ls/alias ls/g' /root/.bashrc
 sed -i 's/# alias ll/alias ll/g' /root/.bashrc
 sed -i 's/# alias l/alias l/g' /root/.bashrc
-source /root/.bashrc
+source ~/.bashrc
 echo -e "Update bash configuration \t ${txtgreen}[OK]${txtrst}"
