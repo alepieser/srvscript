@@ -65,9 +65,9 @@ ntp)
 	runscript ntp.sh
 ;;
 nobody)
-	wget -q $url/security/nobody-update.sh --no-check-certificate
-	quitOnError "Download nobody-update script"
-	runscript nobody-update.sh
+	wget -q $url/security/nobody.sh --no-check-certificate
+	quitOnError "Download nobody script"
+	runscript nobody.sh
 ;;
 firewall)
 	wget -q $url/firewall/firewall-config.sh --no-check-certificate
