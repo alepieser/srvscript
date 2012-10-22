@@ -1,4 +1,7 @@
 #!/bin/sh
+#
+# Created by: Alexandre Servoz
+# Version: 1.0
 
 case "$1" in 'load')
 if [ -f '/etc/iptables.rules' ]; then

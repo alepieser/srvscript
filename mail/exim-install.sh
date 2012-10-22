@@ -15,10 +15,18 @@ echo -e "Mail server relay installation\t${txtgreen}[OK]${txtrst}"
 
 # Configure exim
 dpkg-reconfigure exim4-config
+cp /etc/exim4/update-exim4.conf.conf /etc/exim4/update-exim4.conf.conf.bck
+wget -q $url/mail/update-exim4.conf --no-check-certificate
+mv update-exim4.conf.conf /etc/exim4/update-exim4.conf.conf
+chown root:Debian-exim /etc/exim4/update-exim4.conf.conf
 cp /etc/exim4/passwd.client /etc/exim4/passwd.client.bck
-vim /etc/exim4/passwd.client
+echo ' '
+read -p "Enter email address: " email
+read -p "Enter email password: " password
+echo "*.google.com:${email}:${password}" > /etc/exim4/passwd.client
 chown root:Debian-exim /etc/exim4/passwd.client
 update-exim4.conf
+/etc/init.d/exim4 restart
 
 # Firewall rules
 iptables -t filter -A OUTPUT -o venet0 -p tcp --dport 587 -j ACCEPT
@@ -29,4 +37,3 @@ echo -e "Firewall update for SMTP\t${txtgreen}[OK]${txtrst}"
 echo "Server Mail Test Message " | mail -s "Just Test" alexandre.servoz@gmail.com
 
 echo -e "Mail server relay configuration\t${txtgreen}[OK]${txtrst}"
-
