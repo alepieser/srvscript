@@ -18,3 +18,13 @@ else
 	/etc/network/firewall
 	echo -e "Firewall configuration\t${txtgreen}[OK]${txtrst}"
 fi
+
+wget -q $url/firewall/fwcmd.sh --no-check-certificate
+if [ $? -ne 0 ]
+then echo -e "Download fwcmd script\t ${txtred}[ERROR]${txtrst}"
+else
+	chmod +x fwcmd.sh
+	mv fwcmd.sh /etc/network/fwcmd
+	/etc/network/fwcmd
+	echo -e "Firewall cmd\t${txtgreen}[OK]${txtrst}"
+fi
