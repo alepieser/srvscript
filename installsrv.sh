@@ -49,6 +49,11 @@ vim)
 	quitOnError "Download vim-update script"
 	runscript vim-update.sh
 ;;
+root)
+	wget -q $url/security/root-update.sh --no-check-certificate
+	quitOnError "Download root-update script"
+	runscript root-update.sh	
+;;
 apt)
 	wget -q $url/apt/apt-update.sh --no-check-certificate
 	quitOnError "Download apt-update script"
