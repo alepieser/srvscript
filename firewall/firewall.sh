@@ -34,6 +34,10 @@ iptables -t filter -A OUTPUT -o venet0 -p icmp -j ACCEPT
 iptables -t filter -A OUTPUT -o venet0 -p tcp --dport 53 -j ACCEPT
 iptables -t filter -A OUTPUT -o venet0 -p udp --dport 53 -j ACCEPT
 
+# HTTP/S OUTPUT
+iptables -t filter -A OUTPUT -o venet0 -p tcp --dport 80 -j ACCEPT
+iptables -t filter -A OUTPUT -o venet0 -p tcp --dport 443 -j ACCEPT
+
 # BLACKLIST IP's
 # iptables -A INPUT -s "BLOCK_THIS_IP" -j DROP
 
