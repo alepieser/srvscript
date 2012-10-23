@@ -30,7 +30,6 @@ if [ $choice = "y" ]; then
 	echo -e "SSL installation\t${txtgreen}[OK]${txtrst}"
 
 	iptables -t filter -A INPUT -i venet0 -p tcp --dport 443 -j ACCEPT
-	iptables -t filter -A OUTPUT -o venet0 -p tcp --dport 443 -j ACCEPT
 	iptables-save -c > /etc/iptables.rules
 	echo -e "Firewall update to listen on 443\t${txtgreen}[OK]${txtrst}"
 fi
@@ -60,13 +59,11 @@ if [ $choice = "y" ]; then
 		echo -e "Apache port change\t${txtred}[OK]${txtrst}"
 
 		iptables -t filter -A INPUT -i venet0 -p tcp --dport $(port) -j ACCEPT
-		iptables -t filter -A OUTPUT -o venet0 -p tcp --dport $(port) -j ACCEPT
 		iptables-save -c > /etc/iptables.rules
 		echo -e "Firewall update to listen on $(port)\t${txtgreen}[OK]${txtrst}"
 	else
 		echo -e "Apache port change\t${txtred}[ERROR]${txtrst}"
 		iptables -t filter -A INPUT -i venet0 -p tcp --dport 80 -j ACCEPT
-		iptables -t filter -A OUTPUT -o venet0 -p tcp --dport 80 -j ACCEPT
 		iptables-save -c > /etc/iptables.rules
 		echo -e "Firewall update to listen on 80\t${txtgreen}[OK]${txtrst}"
 	fi
@@ -75,7 +72,6 @@ fi
 # Open default apache port
 if [ $choice -nq "y" ]; then
 	iptables -t filter -A INPUT -i venet0 -p tcp --dport 80 -j ACCEPT
-	iptables -t filter -A OUTPUT -o venet0 -p tcp --dport 80 -j ACCEPT
 	iptables-save -c > /etc/iptables.rules
 	echo -e "Firewall update to listen on 80\t${txtgreen}[OK]${txtrst}"
 fi
@@ -107,4 +103,19 @@ if [ $choice = "y" ]; then
 			fi
 		fi
 	fi
+fi
+
+read -p "Do you enable fail2ban (y/n):" choice
+if [ $choice = "y" ]; then
+	if [ ! -e '/etc/fail2ban/jail.local' ]; then
+  		touch '/etc/fail2ban/jail.local'
+	fi
+
+if [ -z "$(grep "[vsftpd]" '/etc/fail2ban/jail.local')" ]; then
+echo "[apache]
+enabled = true
+" >> '/etc/fail2ban/jail.local'
+fi
+
+	/etc/init.d/fail2ban restart
 fi

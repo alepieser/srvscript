@@ -5,51 +5,42 @@
 #
 # Version: 1.0
 
-
-init_system() {
-	echo "Init virtual user for vsftpd "
-	mkdir /etc/vsftpd
-	mkdir /etc/vsftpd/vsftpd_user_conf
-	touch  /etc/vsftpd/login.txt
-	touch  /etc/vsftpd/user_list
-	chmod 600 /etc/vsftpd/login.txt
-	chmod 600 /etc/vsftpd/user_list
-	cp /etc/pam.d/vsftpd /etc/pam.d/vsftpd.bck
-	echo "auth required /lib/security/pam_userdb.so db=/etc/vsftpd/login" > /etc/pam.d/vsftpd
-	echo "account required /lib/security/pam_userdb.so db=/etc/vsftpd/login" >> /etc/pam.d/vsftpd
-	echo "	[OK]"
-}
-
 add_user() {
 	clear
 	
 	directory=/etc/vsftpd/vsftpd_user_conf/
 	
-	read -p "Enter username (login) : " name
+	read -p "Enter username (login): " name
 	echo ' '
-	read -p "Enter password (password) : " password
+	read -p "Enter password (password): " password
 	echo ' '
-	read -p "User account type (Admin/User) (a/u) : " type
+	read -p "Enter user directory: " userdir
+	echo ' '
+	read -p "User account type (Admin/User) (a/u): " type
 	echo ' '
 	# We make a copy of file "admin" or "user" corresponding of choice made
 	if [ $type = "a" ]; then
+		grep -v "^[ ]*$" /etc/vsftpd/login.txt > /etc/vsftpd/login.txt
 		echo $name >> /etc/vsftpd/login.txt
 		echo $password >> /etc/vsftpd/login.txt
 		echo " " >> /etc/vsftpd/login.txt
 		db4.8_load  -T -t hash -f /etc/vsftpd/login.txt /etc/vsftpd/login.db
 		chmod 600 /etc/vsftpd/login.db
 		cp $directory/admin $directory/$name
+		echo "local_root={$userdir}" >> $directory/$name
 		echo ' '
 		echo 'Admin account "'$name'" was created successfully !'
 		read -p "Press a key to quit." -n 1 key
 		exit
 	elif [ $type = "u" ]; then
+		grep -v "^[ ]*$" /etc/vsftpd/login.txt > /etc/vsftpd/login.txt
 		echo $name >> /etc/vsftpd/login.txt
 		echo $password >> /etc/vsftpd/login.txt
 		echo " " >> /etc/vsftpd/login.txt
 		db4.8_load  -T -t hash -f /etc/vsftpd/login.txt /etc/vsftpd/login.db
 		chmod 600 /etc/vsftpd/login.db
 		cp $directory/user $directory/$name
+		echo "local_root={$userdir}" >> $directory/$name
 		echo ' '
 		echo 'User account "'$name'" was created successfully !'
 		read -p "Press a key to quit." -n 1 key
@@ -57,6 +48,7 @@ add_user() {
 	else
 		read -p "Error, please enter (a/u) : " type2
 		if [ $type2 = "a" ]; then
+			grep -v "^[ ]*$" /etc/vsftpd/login.txt > /etc/vsftpd/login.txt
 			echo $name >> /etc/vsftpd/login.txt
 			echo $name >> /etc/vsftpd/login.txt
 			echo $password >> /etc/vsftpd/login.txt
@@ -64,11 +56,13 @@ add_user() {
 			db4.8_load  -T -t hash -f /etc/vsftpd/login.txt /etc/vsftpd/login.db
 			chmod 600 /etc/vsftpd/login.db
 			cp $directory/admin $directory/$name
+			echo "local_root={$userdir}" >> $directory/$name
 			echo ' '
 			echo 'Admin account "'$name'" was created successfully !'
 			read -p "Press a key to quit." -n 1 key
 			exit
 		elif [ $type2 = "u" ]; then
+			grep -v "^[ ]*$" /etc/vsftpd/login.txt > /etc/vsftpd/login.txt
 			echo $name >> /etc/vsftpd/login.txt
 			echo $password >> /etc/vsftpd/login.txt
 			echo " " >> /etc/vsftpd/login.txt
@@ -92,9 +86,6 @@ remove_user() {
 }
 
 case "$1" in
-init)
-	init_system
-;;
 addusr)
 	add_user
 ;;
@@ -111,6 +102,8 @@ restart)
 	service vsftpd restart
 ;;
 clean)
+
+;;
 *)
 	echo "Usage: vsftpdcmd {int|addusr|rmuser|start|stop|restart|clean}"
 	exit 1

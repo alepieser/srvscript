@@ -26,24 +26,94 @@ if [ $? -ne 0 ]; then
 	echo -e "Download vsftpd config\t${txtred}[ERROR]${txtrst}"
 else
 	mv vsftpd.conf /etc/vsftpd.conf
+	chmod 600 /etc/vsftpd.conf
 	echo -e "Default vsftpd configuration\t${txtgreen}[OK]${txtrst}"
 fi
 
 # Init vsftpd to use virtual user
+mkdir /etc/vsftpd
+mkdir /etc/vsftpd/vsftpd_user_conf
+touch  /etc/vsftpd/login.txt
+touch  /etc/vsftpd/user_list
+chmod 600 /etc/vsftpd/login.txt
+chmod 600 /etc/vsftpd/user_list
+cp /etc/pam.d/vsftpd /etc/pam.d/vsftpd.bck
+echo "auth required /lib/security/pam_userdb.so db=/etc/vsftpd/login" > /etc/pam.d/vsftpd
+echo "account required /lib/security/pam_userdb.so db=/etc/vsftpd/login" >> /etc/pam.d/vsftpd
+echo -e "Init vsftpd environnement\t${txtgreen}[OK]${txtrst}"
+
+# Download vsftpdcmd.sh
 wget -q $url/ftp/vsftpdcmd.sh --no-check-certificate
 if [ $? -ne 0 ]; then
 	echo -e "Download vsftpdcmd script\t${txtred}[ERROR]${txtrst}"
 else
 	mv vsftpdcmd.sh /etc/vsftpd/vsftpdcmd
 	chmod +x /etc/vsftpd/vsftpdcmd
-	vsftpdcmd init
 	echo -e "vsftpd initialisation\t${txtgreen}[OK]${txtrst}"
 fi
 
+# Download admin default config
+wget -q $url/ftp/admin.conf --no-check-certificate --output-document="/etc/vsftpd/vsftpd_user_conf/admin"
+if [ $? -ne 0 ]; then
+	echo -e "Download admin conf\t${txtred}[ERROR]${txtrst}"
+fi
+
+# Download user default config
+wget -q $url/ftp/user.conf --no-check-certificate --output-document="/etc/vsftpd/vsftpd_user_conf/user"
+if [ $? -ne 0 ]; then
+	echo -e "Download user conf\t${txtred}[ERROR]${txtrst}"
+fi
+
 # FTP Rules
-iptables -t filter -A INPUT -i venet0 -p tcp --dport 5120 -m state --state ESTABLISHED,RELATED -j ACCEPT
+#iptables -t filter -A INPUT -i venet0 -p tcp --dport 5120 -m state --state ESTABLISHED,RELATED -j ACCEPT
 iptables -t filter -A INPUT -i venet0 -p tcp --dport 5121 -m state --state NEW,ESTABLISHED -j ACCEPT
-iptables -t filter -A INPUT -i venet0 -p tcp --dport 5000:5100 -j ACCEPT
-iptables -t filter -A OUTPUT -o venet0 -p tcp --dport 21 -j ACCEPT
+#iptables -t filter -A INPUT -i venet0 -p tcp --dport 5000:5100 -j ACCEPT
 iptables-save -c > /etc/iptables.rules
 echo -e "Firewall update for FTP\t${txtgreen}[OK]${txtrst}"
+
+# Specify some specification informations
+read -p "Do you want change banner text (y/n):" choice
+if [ $choice = "y" ]; then
+	read -p "Enter the new banner : " banner
+	echo ' '
+	echo "ftpd_banner={$banner}" >> /etc/vsftpd.conf
+else
+	echo "ftpd_banner=Welcome to Nectiz FTP Server" >> /etc/vsftpd.conf
+fi
+
+read -p "Do you want change the guest username (y/n):" choice
+if [ $choice = "y" ]; then
+	read -p "Enter the new username : " guest
+	echo ' '
+	echo "guest_username={$guest}" >> /etc/vsftpd.conf
+	echo "nopriv_user={$guest}" >> /etc/vsftpd.conf
+else
+	echo "guest_username=ftp" >> /etc/vsftpd.conf
+	echo "nopriv_user =ftp" >> /etc/vsftpd.conf
+fi
+
+read -p "Do you want ban the root user (y/n):" choice
+if [ $choice = "y" ]; then
+	echo "root" >> /etc/vsftpd/user_list
+	echo " " >> /etc/vsftpd/user_list
+fi
+
+read -p "Do you enable fail2ban (y/n):" choice
+if [ $choice = "y" ]; then
+	if [ ! -e '/etc/fail2ban/jail.local' ]; then
+  		touch '/etc/fail2ban/jail.local'
+	fi
+
+if [ -z "$(grep "[vsftpd]" '/etc/fail2ban/jail.local')" ]; then
+echo "[vsftpd]
+enabled = true
+" >> '/etc/fail2ban/jail.local'
+fi
+
+	/etc/init.d/fail2ban restart
+fi
+
+read -p "Do you create a user (y/n):" choice
+if [ $choice = "y" ]; then
+	/etc/vsftpd/vsftpdcmd addusr
+fi
