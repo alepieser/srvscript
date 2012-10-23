@@ -14,6 +14,8 @@ apt-get install vsftpd openssl db4.8-util
 echo -e "FTP with TLS installation\t${txtgreen}[OK]${txtrst}"
 
 # Create a self ssl certificate (10year)
+echo -e "\n\n"
+read -p "Press a key to start ssl key genertaion" -n 1 key
 mkdir -p /etc/ssl/private
 chmod 600 /etc/ssl/private
 openssl req -x509 -nodes -days 3650 -newkey rsa:1024 -keyout /etc/ssl/private/vsftpd.pem -out /etc/ssl/private/vsftpd.pem
@@ -64,12 +66,27 @@ if [ $? -ne 0 ]; then
 	echo -e "Download user conf\t${txtred}[ERROR]${txtrst}"
 fi
 
-# FTP Rules
-#iptables -t filter -A INPUT -i venet0 -p tcp --dport 5120 -m state --state ESTABLISHED,RELATED -j ACCEPT
-iptables -t filter -A INPUT -i venet0 -p tcp --dport 5121 -m state --state NEW,ESTABLISHED -j ACCEPT
-#iptables -t filter -A INPUT -i venet0 -p tcp --dport 5000:5100 -j ACCEPT
-iptables-save -c > /etc/iptables.rules
-echo -e "Firewall update for FTP\t${txtgreen}[OK]${txtrst}"
+# FTP Rules 
+if [ -e '/etc/fail2ban/jail.local' ]; then
+	sed -i 's/iptables -A INPUT -j DROP//g' /etc/network/firewall
+	sed -i 's/iptables -A OUTPUT -j DROP//g' /etc/network/firewall
+	sed -i 's/iptables -A FORWARD -j DROP//g' /etc/network/firewall
+	
+	echo -e "\n# FTP Input" >> /etc/network/firewall
+	#iptables -t filter -A INPUT -i venet0 -p tcp --dport 5120 -m state --state ESTABLISHED,RELATED -j ACCEPT
+	echo "iptables -t filter -A INPUT -i venet0 -p tcp --dport 5121 -m state --state NEW,ESTABLISHED -j ACCEPT" >> /etc/network/firewall
+	#iptables -t filter -A INPUT -i venet0 -p tcp --dport 5000:5100 -j ACCEPT
+	
+	echo "iptables -A INPUT -j DROP" >> /etc/network/firewall
+	echo "iptables -A OUTPUT -j DROP" >> /etc/network/firewall
+	echo "iptables -A FORWARD -j DROP" >> /etc/network/firewall
+	
+	/etc/network/firewall
+	iptables-save -c > /etc/iptables.rules
+	echo -e "Firewall update for FTP\t${txtgreen}[OK]${txtrst}"
+else
+	echo -e "Firewall script doesn't exist\t${txtred}[OK]${txtrst}"
+fi
 
 # Specify some specification informations
 read -p "Do you want change banner text (y/n):" choice
@@ -85,11 +102,11 @@ read -p "Do you want change the guest username (y/n):" choice
 if [ $choice = "y" ]; then
 	read -p "Enter the new username : " guest
 	echo ' '
-	echo "guest_username={$guest}" >> /etc/vsftpd.conf
-	echo "nopriv_user={$guest}" >> /etc/vsftpd.conf
+	echo "guest_username=$guest" >> /etc/vsftpd.conf
+	echo "nopriv_user=$guest" >> /etc/vsftpd.conf
 else
 	echo "guest_username=ftp" >> /etc/vsftpd.conf
-	echo "nopriv_user =ftp" >> /etc/vsftpd.conf
+	echo "nopriv_user=ftp" >> /etc/vsftpd.conf
 fi
 
 read -p "Do you want ban the root user (y/n):" choice
@@ -117,3 +134,5 @@ read -p "Do you create a user (y/n):" choice
 if [ $choice = "y" ]; then
 	/etc/vsftpd/vsftpdcmd addusr
 fi
+
+/etc

@@ -29,9 +29,24 @@ if [ $choice = "y" ]; then
 	apt-get install ssl-cert
 	echo -e "SSL installation\t${txtgreen}[OK]${txtrst}"
 
-	iptables -t filter -A INPUT -i venet0 -p tcp --dport 443 -j ACCEPT
-	iptables-save -c > /etc/iptables.rules
-	echo -e "Firewall update to listen on 443\t${txtgreen}[OK]${txtrst}"
+	if [ -e '/etc/fail2ban/jail.local' ]; then
+  		sed -i 's/iptables -A INPUT -j DROP//g' /etc/network/firewall
+		sed -i 's/iptables -A OUTPUT -j DROP//g' /etc/network/firewall
+		sed -i 's/iptables -A FORWARD -j DROP//g' /etc/network/firewall
+	
+		echo -e "\n# HTTPS Intput" >> /etc/network/firewall
+		echo "iptables -t filter -A INPUT -i venet0 -p tcp --dport 443 -j ACCEPT" >> /etc/network/firewall
+
+		echo "iptables -A INPUT -j DROP" >> /etc/network/firewall
+		echo "iptables -A OUTPUT -j DROP" >> /etc/network/firewall
+		echo "iptables -A FORWARD -j DROP" >> /etc/network/firewall
+	
+		/etc/network/firewall
+		iptables-save -c > /etc/iptables.rules
+		echo -e "Firewall update to listen on 443\t${txtgreen}[OK]${txtrst}"
+	else
+		echo -e "Firewall script doesn't exist\t${txtred}[OK]${txtrst}"
+	fi
 fi
 
 # Enable rewrite module
@@ -57,23 +72,68 @@ if [ $choice = "y" ]; then
 		sed -i 's/Listen 80/Listen $(port)/g' /etc/apache2/ports.conf
 		sed -i 's/NameVirtualHost *:80/NameVirtualHost *:$(port)/g' /etc/apache2/ports.conf
 		echo -e "Apache port change\t${txtred}[OK]${txtrst}"
+		if [ -e '/etc/fail2ban/jail.local' ]; then
+  			sed -i 's/iptables -A INPUT -j DROP//g' /etc/network/firewall
+			sed -i 's/iptables -A OUTPUT -j DROP//g' /etc/network/firewall
+			sed -i 's/iptables -A FORWARD -j DROP//g' /etc/network/firewall
+	
+			echo -e "\n# HTTP Intput" >> /etc/network/firewall
+			echo "iptables -t filter -A INPUT -i venet0 -p tcp --dport $port -j ACCEPT" >> /etc/network/firewall
 
-		iptables -t filter -A INPUT -i venet0 -p tcp --dport $(port) -j ACCEPT
-		iptables-save -c > /etc/iptables.rules
-		echo -e "Firewall update to listen on $(port)\t${txtgreen}[OK]${txtrst}"
+			echo "iptables -A INPUT -j DROP" >> /etc/network/firewall
+			echo "iptables -A OUTPUT -j DROP" >> /etc/network/firewall
+			echo "iptables -A FORWARD -j DROP" >> /etc/network/firewall
+	
+			/etc/network/firewall
+			iptables-save -c > /etc/iptables.rules
+			echo -e "Firewall update to listen on $(port)\t${txtgreen}[OK]${txtrst}"{txtrst}"
+		else
+			echo -e "Firewall script doesn't exist\t${txtred}[OK]${txtrst}"
+		fi
+
 	else
 		echo -e "Apache port change\t${txtred}[ERROR]${txtrst}"
-		iptables -t filter -A INPUT -i venet0 -p tcp --dport 80 -j ACCEPT
-		iptables-save -c > /etc/iptables.rules
-		echo -e "Firewall update to listen on 80\t${txtgreen}[OK]${txtrst}"
+		if [ -e '/etc/fail2ban/jail.local' ]; then
+  			sed -i 's/iptables -A INPUT -j DROP//g' /etc/network/firewall
+			sed -i 's/iptables -A OUTPUT -j DROP//g' /etc/network/firewall
+			sed -i 's/iptables -A FORWARD -j DROP//g' /etc/network/firewall
+	
+			echo -e "\n# HTTP Intput" >> /etc/network/firewall
+			echo "iptables -t filter -A INPUT -i venet0 -p tcp --dport 80 -j ACCEPT" >> /etc/network/firewall
+
+			echo "iptables -A INPUT -j DROP" >> /etc/network/firewall
+			echo "iptables -A OUTPUT -j DROP" >> /etc/network/firewall
+			echo "iptables -A FORWARD -j DROP" >> /etc/network/firewall
+	
+			/etc/network/firewall
+			iptables-save -c > /etc/iptables.rules
+			echo -e "Firewall update to listen on 80\t${txtgreen}[OK]${txtrst}"
+		else
+			echo -e "Firewall script doesn't exist\t${txtred}[OK]${txtrst}"
+		fi
 	fi
 fi
 
 # Open default apache port
 if [ $choice -nq "y" ]; then
-	iptables -t filter -A INPUT -i venet0 -p tcp --dport 80 -j ACCEPT
-	iptables-save -c > /etc/iptables.rules
-	echo -e "Firewall update to listen on 80\t${txtgreen}[OK]${txtrst}"
+	if [ -e '/etc/fail2ban/jail.local' ]; then
+  		sed -i 's/iptables -A INPUT -j DROP//g' /etc/network/firewall
+		sed -i 's/iptables -A OUTPUT -j DROP//g' /etc/network/firewall
+		sed -i 's/iptables -A FORWARD -j DROP//g' /etc/network/firewall
+	
+		echo -e "\n# HTTP Intput" >> /etc/network/firewall
+		echo "iptables -t filter -A INPUT -i venet0 -p tcp --dport 80 -j ACCEPT" >> /etc/network/firewall
+
+		echo "iptables -A INPUT -j DROP" >> /etc/network/firewall
+		echo "iptables -A OUTPUT -j DROP" >> /etc/network/firewall
+		echo "iptables -A FORWARD -j DROP" >> /etc/network/firewall
+	
+		/etc/network/firewall
+		iptables-save -c > /etc/iptables.rules
+		echo -e "Firewall update to listen on 80\t${txtgreen}[OK]${txtrst}"
+	else
+		echo -e "Firewall script doesn't exist\t${txtred}[OK]${txtrst}"
+	fi
 fi
 
 # Install php module

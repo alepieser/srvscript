@@ -27,7 +27,7 @@ add_user() {
 		db4.8_load  -T -t hash -f /etc/vsftpd/login.txt /etc/vsftpd/login.db
 		chmod 600 /etc/vsftpd/login.db
 		cp $directory/admin $directory/$name
-		echo "local_root={$userdir}" >> $directory/$name
+		echo "local_root=$userdir" >> $directory/$name
 		echo ' '
 		echo 'Admin account "'$name'" was created successfully !'
 		read -p "Press a key to quit." -n 1 key
@@ -40,7 +40,7 @@ add_user() {
 		db4.8_load  -T -t hash -f /etc/vsftpd/login.txt /etc/vsftpd/login.db
 		chmod 600 /etc/vsftpd/login.db
 		cp $directory/user $directory/$name
-		echo "local_root={$userdir}" >> $directory/$name
+		echo "local_root=$userdir" >> $directory/$name
 		echo ' '
 		echo 'User account "'$name'" was created successfully !'
 		read -p "Press a key to quit." -n 1 key
