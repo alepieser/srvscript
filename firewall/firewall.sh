@@ -28,7 +28,8 @@ iptables -t filter -A OUTPUT -o venet0 -p tcp --sport 22 -m state --state ESTABL
 iptables -t filter -t filter -A INPUT -i venet0 -p icmp -j ACCEPT
 iptables -t filter -A OUTPUT -o venet0 -p icmp -j ACCEPT
 
-# Whois iptables -t filter -A OUTPUT -o venet0 -p tcp --dport 43 -j ACCEPT
+# Whois
+iptables -t filter -A OUTPUT -o venet0 -p tcp --dport 43 -j ACCEPT
 
 # DNS
 iptables -t filter -A OUTPUT -o venet0 -p tcp --dport 53 -j ACCEPT

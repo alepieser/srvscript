@@ -29,21 +29,25 @@ update-exim4.conf
 /etc/init.d/exim4 restart
 
 # Firewall rules
-if [ -e '/etc/fail2ban/jail.local' ]; then
-	sed -i 's/iptables -A INPUT -j DROP//g' /etc/network/firewall
-	sed -i 's/iptables -A OUTPUT -j DROP//g' /etc/network/firewall
-	sed -i 's/iptables -A FORWARD -j DROP//g' /etc/network/firewall
+if [ -e '/etc/network/firewall' ]; then
+	if [-z "$(grep "iptables -t filter -A OUTPUT -o venet0 -p tcp --dport 587 -j ACCEPT" '/etc/network/firewall')" ]; then
+		sed -i 's/iptables -A INPUT -j DROP//g' /etc/network/firewall
+		sed -i 's/iptables -A OUTPUT -j DROP//g' /etc/network/firewall
+		sed -i 's/iptables -A FORWARD -j DROP//g' /etc/network/firewall
 	
-	echo -e "\n# SMTP Output" >> /etc/network/firewall
-	echo "iptables -t filter -A OUTPUT -o venet0 -p tcp --dport 587 -j ACCEPT" >> /etc/network/firewall
+		echo -e "\n# SMTP Output" >> /etc/network/firewall
+		echo "iptables -t filter -A OUTPUT -o venet0 -p tcp --dport 587 -j ACCEPT" >> /etc/network/firewall
 	
-	echo "iptables -A INPUT -j DROP" >> /etc/network/firewall
-	echo "iptables -A OUTPUT -j DROP" >> /etc/network/firewall
-	echo "iptables -A FORWARD -j DROP" >> /etc/network/firewall
+		echo "iptables -A INPUT -j DROP" >> /etc/network/firewall
+		echo "iptables -A OUTPUT -j DROP" >> /etc/network/firewall
+		echo "iptables -A FORWARD -j DROP" >> /etc/network/firewall
 	
-	/etc/network/firewall
-	iptables-save -c > /etc/iptables.rules
-	echo -e "Firewall update for SMTP\t${txtgreen}[OK]${txtrst}"
+		/etc/network/firewall
+		iptables-save -c > /etc/iptables.rules
+		echo -e "Firewall update for SMTP\t${txtgreen}[OK]${txtrst}"
+	else
+		echo -e "Firewall already updated\t${txtgreen}[OK]$
+	fi
 else
 	echo -e "Firewall script doesn't exist\t${txtred}[OK]${txtrst}"
 fi

@@ -29,23 +29,27 @@ if [ $choice = "y" ]; then
 	apt-get install ssl-cert
 	echo -e "SSL installation\t${txtgreen}[OK]${txtrst}"
 
-	if [ -e '/etc/fail2ban/jail.local' ]; then
-  		sed -i 's/iptables -A INPUT -j DROP//g' /etc/network/firewall
-		sed -i 's/iptables -A OUTPUT -j DROP//g' /etc/network/firewall
-		sed -i 's/iptables -A FORWARD -j DROP//g' /etc/network/firewall
+	if [ -e '/etc/network/firewall' ]; then
+		if [-z "$(grep 'iptables -t filter -A INPUT -i venet0 -p tcp --dport 443 -j ACCEPT' '/etc/network/firewall')" ]; then
+  			sed -i 's/iptables -A INPUT -j DROP//g' /etc/network/firewall
+			sed -i 's/iptables -A OUTPUT -j DROP//g' /etc/network/firewall
+			sed -i 's/iptables -A FORWARD -j DROP//g' /etc/network/firewall
 	
-		echo -e "\n# HTTPS Intput" >> /etc/network/firewall
-		echo "iptables -t filter -A INPUT -i venet0 -p tcp --dport 443 -j ACCEPT" >> /etc/network/firewall
+			echo -e "\n# HTTPS Intput" >> /etc/network/firewall
+			echo "iptables -t filter -A INPUT -i venet0 -p tcp --dport 443 -j ACCEPT" >> /etc/network/firewall
 
-		echo "iptables -A INPUT -j DROP" >> /etc/network/firewall
-		echo "iptables -A OUTPUT -j DROP" >> /etc/network/firewall
-		echo "iptables -A FORWARD -j DROP" >> /etc/network/firewall
+			echo "iptables -A INPUT -j DROP" >> /etc/network/firewall
+			echo "iptables -A OUTPUT -j DROP" >> /etc/network/firewall
+			echo "iptables -A FORWARD -j DROP" >> /etc/network/firewall
 	
-		/etc/network/firewall
-		iptables-save -c > /etc/iptables.rules
-		echo -e "Firewall update to listen on 443\t${txtgreen}[OK]${txtrst}"
+			/etc/network/firewall
+			iptables-save -c > /etc/iptables.rules
+			echo -e "Firewall update to listen on 443\t${txtgreen}[OK]${txtrst}"
+		else
+			echo -e "Firewall already updated\t${txtgreen}[OK]$
+		fi
 	else
-		echo -e "Firewall script doesn't exist\t${txtred}[OK]${txtrst}"
+		echo -e "Firewall script doesn't exist\t${txtred}[ERROR]${txtrst}"
 	fi
 fi
 
@@ -72,34 +76,45 @@ if [ $choice = "y" ]; then
 		sed -i 's/Listen 80/Listen $(port)/g' /etc/apache2/ports.conf
 		sed -i 's/NameVirtualHost *:80/NameVirtualHost *:$(port)/g' /etc/apache2/ports.conf
 		echo -e "Apache port change\t${txtred}[OK]${txtrst}"
-		if [ -e '/etc/fail2ban/jail.local' ]; then
-  			sed -i 's/iptables -A INPUT -j DROP//g' /etc/network/firewall
-			sed -i 's/iptables -A OUTPUT -j DROP//g' /etc/network/firewall
-			sed -i 's/iptables -A FORWARD -j DROP//g' /etc/network/firewall
+		if [ -e '/etc/network/firewall' ]; then
+			if [-z "$(grep "iptables -t filter -A INPUT -i venet0 -p tcp --dport $port -j ACCEPT" '/etc/network/firewall')" ]; then
+  				sed -i '/iptables -A INPUT -j DROP/d' /etc/network/firewall
+				sed -i '/iptables -A OUTPUT -j DROP/d' /etc/network/firewall
+				sed -i '/iptables -A FORWARD -j DROP/d' /etc/network/firewall
 	
-			echo -e "\n# HTTP Intput" >> /etc/network/firewall
-			echo "iptables -t filter -A INPUT -i venet0 -p tcp --dport $port -j ACCEPT" >> /etc/network/firewall
+				echo -e "\n# HTTP Intput" >> /etc/network/firewall
+				echo -e "iptables -t filter -A INPUT -i venet0 -p tcp --dport $port -j ACCEPT\n" >> /etc/network/firewall
 
-			echo "iptables -A INPUT -j DROP" >> /etc/network/firewall
-			echo "iptables -A OUTPUT -j DROP" >> /etc/network/firewall
-			echo "iptables -A FORWARD -j DROP" >> /etc/network/firewall
+				echo "iptables -A INPUT -j DROP" >> /etc/network/firewall
+				echo "iptables -A OUTPUT -j DROP" >> /etc/network/firewall
+				echo "iptables -A FORWARD -j DROP" >> /etc/network/firewall
 	
-			/etc/network/firewall
-			iptables-save -c > /etc/iptables.rules
-			echo -e "Firewall update to listen on $(port)\t${txtgreen}[OK]${txtrst}"{txtrst}"
+				/etc/network/firewall
+				iptables-save -c > /etc/iptables.rules
+				echo -e "Firewall update to listen on $(port)\t${txtgreen}[OK]${txtrst}"
+			else
+				echo -e "Firewall already updated\t${txtgreen}[OK]$
+			fi
 		else
-			echo -e "Firewall script doesn't exist\t${txtred}[OK]${txtrst}"
+			echo -e "Firewall script doesn't exist\t${txtred}[ERROR]${txtrst}"
 		fi
 
 	else
 		echo -e "Apache port change\t${txtred}[ERROR]${txtrst}"
-		if [ -e '/etc/fail2ban/jail.local' ]; then
-  			sed -i 's/iptables -A INPUT -j DROP//g' /etc/network/firewall
-			sed -i 's/iptables -A OUTPUT -j DROP//g' /etc/network/firewall
-			sed -i 's/iptables -A FORWARD -j DROP//g' /etc/network/firewall
+		choice = "y"
+	fi
+fi
+
+# Open default apache port
+if [ $choice -ne "y" ]; then
+	if [ -e '/etc/network/firewall' ]; then
+		if [ -z "$(grep 'iptables -t filter -A INPUT -i venet0 -p tcp --dport 80 -j ACCEPT' '/etc/network/firewall')" ]; then
+  			sed -i '/iptables -A INPUT -j DROP/d' /etc/network/firewall
+			sed -i '/iptables -A OUTPUT -j DROP/d' /etc/network/firewall
+			sed -i '/iptables -A FORWARD -j DROP/d' /etc/network/firewall
 	
 			echo -e "\n# HTTP Intput" >> /etc/network/firewall
-			echo "iptables -t filter -A INPUT -i venet0 -p tcp --dport 80 -j ACCEPT" >> /etc/network/firewall
+			echo -e "iptables -t filter -A INPUT -i venet0 -p tcp --dport 80 -j ACCEPT\n" >> /etc/network/firewall
 
 			echo "iptables -A INPUT -j DROP" >> /etc/network/firewall
 			echo "iptables -A OUTPUT -j DROP" >> /etc/network/firewall
@@ -109,30 +124,10 @@ if [ $choice = "y" ]; then
 			iptables-save -c > /etc/iptables.rules
 			echo -e "Firewall update to listen on 80\t${txtgreen}[OK]${txtrst}"
 		else
-			echo -e "Firewall script doesn't exist\t${txtred}[OK]${txtrst}"
+			echo -e "Firewall already updated\t${txtgreen}[OK]$
 		fi
-	fi
-fi
-
-# Open default apache port
-if [ $choice -nq "y" ]; then
-	if [ -e '/etc/fail2ban/jail.local' ]; then
-  		sed -i 's/iptables -A INPUT -j DROP//g' /etc/network/firewall
-		sed -i 's/iptables -A OUTPUT -j DROP//g' /etc/network/firewall
-		sed -i 's/iptables -A FORWARD -j DROP//g' /etc/network/firewall
-	
-		echo -e "\n# HTTP Intput" >> /etc/network/firewall
-		echo "iptables -t filter -A INPUT -i venet0 -p tcp --dport 80 -j ACCEPT" >> /etc/network/firewall
-
-		echo "iptables -A INPUT -j DROP" >> /etc/network/firewall
-		echo "iptables -A OUTPUT -j DROP" >> /etc/network/firewall
-		echo "iptables -A FORWARD -j DROP" >> /etc/network/firewall
-	
-		/etc/network/firewall
-		iptables-save -c > /etc/iptables.rules
-		echo -e "Firewall update to listen on 80\t${txtgreen}[OK]${txtrst}"
 	else
-		echo -e "Firewall script doesn't exist\t${txtred}[OK]${txtrst}"
+		echo -e "Firewall script doesn't exist\t${txtred}[ERROR]${txtrst}"
 	fi
 fi
 
