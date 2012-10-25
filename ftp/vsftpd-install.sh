@@ -73,9 +73,9 @@ if [ -e '/etc/fail2ban/jail.local' ]; then
 	sed -i 's/iptables -A FORWARD -j DROP//g' /etc/network/firewall
 	
 	echo -e "\n# FTP Input" >> /etc/network/firewall
-	#iptables -t filter -A INPUT -i venet0 -p tcp --dport 5120 -m state --state ESTABLISHED,RELATED -j ACCEPT
+	echo "iptables -t filter -A INPUT -i venet0 -p tcp --dport 5120 -m state --state ESTABLISHED,RELATED -j ACCEPT" >> /etc/network/firewall
 	echo "iptables -t filter -A INPUT -i venet0 -p tcp --dport 5121 -m state --state NEW,ESTABLISHED -j ACCEPT" >> /etc/network/firewall
-	#iptables -t filter -A INPUT -i venet0 -p tcp --dport 5000:5100 -j ACCEPT
+	echo "iptables -t filter -A INPUT -i venet0 -p tcp --dport 5000:5100 -j ACCEPT" >> /etc/network/firewall
 	
 	echo "iptables -A INPUT -j DROP" >> /etc/network/firewall
 	echo "iptables -A OUTPUT -j DROP" >> /etc/network/firewall
