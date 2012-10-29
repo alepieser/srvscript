@@ -30,10 +30,10 @@ update-exim4.conf
 
 # Firewall rules
 if [ -e '/etc/network/firewall' ]; then
-	if [-z "$(grep "iptables -t filter -A OUTPUT -o venet0 -p tcp --dport 587 -j ACCEPT" '/etc/network/firewall')" ]; then
-		sed -i 's/iptables -A INPUT -j DROP//g' /etc/network/firewall
-		sed -i 's/iptables -A OUTPUT -j DROP//g' /etc/network/firewall
-		sed -i 's/iptables -A FORWARD -j DROP//g' /etc/network/firewall
+	if [ -z "$(grep "iptables -t filter -A OUTPUT -o venet0 -p tcp --dport 587 -j ACCEPT" /etc/network/firewall)" ]; then
+		sed -i '/iptables -A INPUT -j DROP/d' /etc/network/firewall
+		sed -i '/iptables -A OUTPUT -j DROP/d' /etc/network/firewall
+		sed -i '/iptables -A FORWARD -j DROP/d' /etc/network/firewall
 	
 		echo -e "\n# SMTP Output" >> /etc/network/firewall
 		echo "iptables -t filter -A OUTPUT -o venet0 -p tcp --dport 587 -j ACCEPT" >> /etc/network/firewall

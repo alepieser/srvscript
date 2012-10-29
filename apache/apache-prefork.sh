@@ -24,16 +24,15 @@ echo -e "Apache server installation\t${txtgreen}[OK]${txtrst}"
 # Install ssh
 echo ' '
 read -p "Do you want install ssl (y/n) : " choice
-echo ' '
 if [ $choice = "y" ]; then
 	apt-get install ssl-cert
 	echo -e "SSL installation\t${txtgreen}[OK]${txtrst}"
 
 	if [ -e '/etc/network/firewall' ]; then
-		if [-z "$(grep 'iptables -t filter -A INPUT -i venet0 -p tcp --dport 443 -j ACCEPT' '/etc/network/firewall')" ]; then
-  			sed -i 's/iptables -A INPUT -j DROP//g' /etc/network/firewall
-			sed -i 's/iptables -A OUTPUT -j DROP//g' /etc/network/firewall
-			sed -i 's/iptables -A FORWARD -j DROP//g' /etc/network/firewall
+		if [ -z "$(grep 'iptables -t filter -A INPUT -i venet0 -p tcp --dport 443 -j ACCEPT' /etc/network/firewall)" ]; then
+  			sed -i '/iptables -A INPUT -j DROP/d' /etc/network/firewall
+			sed -i '/iptables -A OUTPUT -j DROP/d' /etc/network/firewall
+			sed -i '/iptables -A FORWARD -j DROP/d' /etc/network/firewall
 	
 			echo -e "\n# HTTPS Intput" >> /etc/network/firewall
 			echo "iptables -t filter -A INPUT -i venet0 -p tcp --dport 443 -j ACCEPT" >> /etc/network/firewall
@@ -77,7 +76,7 @@ if [ $choice = "y" ]; then
 		sed -i 's/NameVirtualHost *:80/NameVirtualHost *:$(port)/g' /etc/apache2/ports.conf
 		echo -e "Apache port change\t${txtred}[OK]${txtrst}"
 		if [ -e '/etc/network/firewall' ]; then
-			if [-z "$(grep "iptables -t filter -A INPUT -i venet0 -p tcp --dport $port -j ACCEPT" '/etc/network/firewall')" ]; then
+			if [ -z "$(grep "iptables -t filter -A INPUT -i venet0 -p tcp --dport $port -j ACCEPT" '/etc/network/firewall')" ]; then
   				sed -i '/iptables -A INPUT -j DROP/d' /etc/network/firewall
 				sed -i '/iptables -A OUTPUT -j DROP/d' /etc/network/firewall
 				sed -i '/iptables -A FORWARD -j DROP/d' /etc/network/firewall
@@ -108,7 +107,7 @@ fi
 # Open default apache port
 if [ $choice -ne "y" ]; then
 	if [ -e '/etc/network/firewall' ]; then
-		if [ -z "$(grep 'iptables -t filter -A INPUT -i venet0 -p tcp --dport 80 -j ACCEPT' '/etc/network/firewall')" ]; then
+		if [ -z "$(grep 'iptables -t filter -A INPUT -i venet0 -p tcp --dport 80 -j ACCEPT' /etc/network/firewall)" ]; then
   			sed -i '/iptables -A INPUT -j DROP/d' /etc/network/firewall
 			sed -i '/iptables -A OUTPUT -j DROP/d' /etc/network/firewall
 			sed -i '/iptables -A FORWARD -j DROP/d' /etc/network/firewall

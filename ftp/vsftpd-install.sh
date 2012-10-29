@@ -68,10 +68,10 @@ fi
 
 # FTP Rules 
 if [ -e '/etc/network/firewall' ]; then
-	if [-z "$(grep "iptables -t filter -A INPUT -i venet0 -p tcp --dport 5121 -m state --state NEW,ESTABLISHED -j ACCEPT" '/etc/network/firewall')" ]; then
-		sed -i 's/iptables -A INPUT -j DROP//g' /etc/network/firewall
-		sed -i 's/iptables -A OUTPUT -j DROP//g' /etc/network/firewall
-		sed -i 's/iptables -A FORWARD -j DROP//g' /etc/network/firewall
+	if [ -z "$(grep "iptables -t filter -A INPUT -i venet0 -p tcp --dport 5121 -m state --state NEW,ESTABLISHED -j ACCEPT" /etc/network/firewall)" ]; then
+		sed -i '/iptables -A INPUT -j DROP/d' /etc/network/firewall
+		sed -i '/iptables -A OUTPUT -j DROP/d' /etc/network/firewall
+		sed -i '/iptables -A FORWARD -j DROP/d' /etc/network/firewall
 	
 		echo -e "\n# FTP Input" >> /etc/network/firewall
 		echo "iptables -t filter -A INPUT -i venet0 -p tcp --dport 5120 -m state --state ESTABLISHED,RELATED -j ACCEPT" >> /etc/network/firewall
