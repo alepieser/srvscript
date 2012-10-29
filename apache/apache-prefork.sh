@@ -103,7 +103,7 @@ if [ $choice = "y" ]; then
 fi
 
 # Open default apache port
-if [ $choice -ne "y" ]; then
+if [ $choice != "y" ]; then
 	if [ -e '/etc/network/firewall' ]; then
 		if [ -z "$(grep 'iptables -t filter -A INPUT -i venet0 -p tcp --dport 80 -j ACCEPT' /etc/network/firewall)" ]; then
   			sed -i '/iptables -A INPUT -j DROP/d' /etc/network/firewall
