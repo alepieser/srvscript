@@ -12,11 +12,10 @@ txtgreen=$(tput setaf 2) # Green
 # Install php extension for lamp configuration
 echo ' '
 read -p "Do you want install php lamp extension (y/n) : " choice
-echo ' '
 if [ $choice = "y" ]; then
-	wget -q $url/php/php-extansion-lamp.sh --no-check-certificate
+	wget -q $url/php/php-extension-lamp.sh --no-check-certificate
 	if [ $? -ne 0 ]; then 
-		echo -e "Download php-extansion-lamp script \t ${txtred}[ERROR]${txtrst}"
+		echo -e "Download php-extansion-lamp script\t${txtred}[ERROR]${txtrst}"
 	else
 		chmod +x php-extansion-lamp.sh
 		sh php-extansion-lamp.sh
@@ -27,7 +26,6 @@ fi
 # Install php security
 echo ' '
 read -p "Do you want install php security (y/n) : " choice
-echo ' '
 if [ $choice = "y" ]; then
 	wget -q $url/php/php-security.sh --no-check-certificate
 	if [ $? -ne 0 ]; then 
@@ -42,7 +40,6 @@ fi
 # Configure php mbstring
 echo ' '
 read -p "Do you want install php mbstring config (y/n) : " choice
-echo ' '
 if [ $choice = "y" ]; then
 	wget -q $url/php/php-mbstring.sh --no-check-certificate
 	if [ $? -ne 0 ]; then 
@@ -57,7 +54,6 @@ fi
 # Configure php timezone
 echo ' '
 read -p "Do you want install php timezone config (y/n) : " choice
-echo ' '
 if [ $choice = "y" ]; then
 	wget -q $url/php/php-timezone.sh --no-check-certificate
 	if [ $? -ne 0 ]; then 
