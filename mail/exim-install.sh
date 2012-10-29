@@ -38,7 +38,7 @@ if [ -e '/etc/network/firewall' ]; then
 		echo -e "\n# SMTP Output" >> /etc/network/firewall
 		echo "iptables -t filter -A OUTPUT -o venet0 -p tcp --dport 587 -j ACCEPT" >> /etc/network/firewall
 	
-		echo "iptables -A INPUT -j DROP" >> /etc/network/firewall
+		echo -e "\niptables -A INPUT -j DROP" >> /etc/network/firewall
 		echo "iptables -A OUTPUT -j DROP" >> /etc/network/firewall
 		echo "iptables -A FORWARD -j DROP" >> /etc/network/firewall
 	
@@ -46,7 +46,7 @@ if [ -e '/etc/network/firewall' ]; then
 		iptables-save -c > /etc/iptables.rules
 		echo -e "Firewall update for SMTP\t${txtgreen}[OK]${txtrst}"
 	else
-		echo -e "Firewall already updated\t${txtgreen}[OK]$
+		echo -e "Firewall already updated\t${txtgreen}[OK]${txtrst}"
 	fi
 else
 	echo -e "Firewall script doesn't exist\t${txtred}[OK]${txtrst}"

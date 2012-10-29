@@ -45,7 +45,7 @@ if [ $choice = "y" ]; then
 			iptables-save -c > /etc/iptables.rules
 			echo -e "Firewall update to listen on 443\t${txtgreen}[OK]${txtrst}"
 		else
-			echo -e "Firewall already updated\t${txtgreen}[OK]$
+			echo -e "Firewall already updated\t${txtgreen}[OK]${txtrst}"
 		fi
 	else
 		echo -e "Firewall script doesn't exist\t${txtred}[ERROR]${txtrst}"
@@ -90,7 +90,7 @@ if [ $choice = "y" ]; then
 				iptables-save -c > /etc/iptables.rules
 				echo -e "Firewall update to listen on $(port)\t${txtgreen}[OK]${txtrst}"
 			else
-				echo -e "Firewall already updated\t${txtgreen}[OK]$
+				echo -e "Firewall already updated\t${txtgreen}[OK]${txtrst}"
 			fi
 		else
 			echo -e "Firewall script doesn't exist\t${txtred}[ERROR]${txtrst}"
@@ -121,7 +121,7 @@ if [ $choice -ne "y" ]; then
 			iptables-save -c > /etc/iptables.rules
 			echo -e "Firewall update to listen on 80\t${txtgreen}[OK]${txtrst}"
 		else
-			echo -e "Firewall already updated\t${txtgreen}[OK]$
+			echo -e "Firewall already updated\t${txtgreen}[OK]${txtrst}"
 		fi
 	else
 		echo -e "Firewall script doesn't exist\t${txtred}[ERROR]${txtrst}"
