@@ -16,7 +16,7 @@ echo -e "Mail server relay installation\t${txtgreen}[OK]${txtrst}"
 # Configure exim
 dpkg-reconfigure exim4-config
 cp /etc/exim4/update-exim4.conf.conf /etc/exim4/update-exim4.conf.conf.bck
-wget -q $url/mail/update-exim4.conf --no-check-certificate
+wget -q $url/mail/update-exim4.conf.conf --no-check-certificate
 mv update-exim4.conf.conf /etc/exim4/update-exim4.conf.conf
 chown root:Debian-exim /etc/exim4/update-exim4.conf.conf
 cp /etc/exim4/passwd.client /etc/exim4/passwd.client.bck
