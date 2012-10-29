@@ -17,9 +17,9 @@ if [ $choice = "y" ]; then
 	if [ $? -ne 0 ]; then 
 		echo -e "Download php-extansion-lamp script\t${txtred}[ERROR]${txtrst}"
 	else
-		chmod +x php-extansion-lamp.sh
-		sh php-extansion-lamp.sh
-		rm php-extansion-lamp.sh
+		chmod +x php-extension-lamp.sh
+		sh php-extension-lamp.sh
+		rm php-extension-lamp.sh
 	fi
 fi
 

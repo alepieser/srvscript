@@ -37,7 +37,7 @@ if [ $choice = "y" ]; then
 			echo -e "\n# HTTPS Intput" >> /etc/network/firewall
 			echo "iptables -t filter -A INPUT -i venet0 -p tcp --dport 443 -j ACCEPT" >> /etc/network/firewall
 
-			echo "iptables -A INPUT -j DROP" >> /etc/network/firewall
+			echo -e "\niptables -A INPUT -j DROP" >> /etc/network/firewall
 			echo "iptables -A OUTPUT -j DROP" >> /etc/network/firewall
 			echo "iptables -A FORWARD -j DROP" >> /etc/network/firewall
 	
@@ -55,7 +55,6 @@ fi
 # Enable rewrite module
 echo ' '
 read -p "Do you want activate rewrite module (y/n) : " choice
-echo ' '
 if [ $choice = "y" ]; then
 	a2enmod rewrite
 	/etc/init.d/apache2 force-reload
@@ -65,7 +64,6 @@ fi
 # Change apache port and open firewall port
 echo ' '
 read -p "Do you want change apache port (y/n) : " choice
-echo ' '
 if [ $choice = "y" ]; then
 	echo ' '
 	read -p "Enter the new port : " port
@@ -84,7 +82,7 @@ if [ $choice = "y" ]; then
 				echo -e "\n# HTTP Intput" >> /etc/network/firewall
 				echo -e "iptables -t filter -A INPUT -i venet0 -p tcp --dport $port -j ACCEPT\n" >> /etc/network/firewall
 
-				echo "iptables -A INPUT -j DROP" >> /etc/network/firewall
+				echo -e "\niptables -A INPUT -j DROP" >> /etc/network/firewall
 				echo "iptables -A OUTPUT -j DROP" >> /etc/network/firewall
 				echo "iptables -A FORWARD -j DROP" >> /etc/network/firewall
 	
@@ -115,7 +113,7 @@ if [ $choice -ne "y" ]; then
 			echo -e "\n# HTTP Intput" >> /etc/network/firewall
 			echo -e "iptables -t filter -A INPUT -i venet0 -p tcp --dport 80 -j ACCEPT\n" >> /etc/network/firewall
 
-			echo "iptables -A INPUT -j DROP" >> /etc/network/firewall
+			echo -e "\niptables -A INPUT -j DROP" >> /etc/network/firewall
 			echo "iptables -A OUTPUT -j DROP" >> /etc/network/firewall
 			echo "iptables -A FORWARD -j DROP" >> /etc/network/firewall
 	
