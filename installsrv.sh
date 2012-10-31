@@ -117,7 +117,7 @@ lamp)
 	runscript apache-prefork.sh
 ;;
 node)
-	wget -q $url/mysql/nodejs-install.sh --no-check-certificate
+	wget -q $url/nodejs/nodejs-install.sh --no-check-certificate
 	quitOnError "Download nodejs-install script"
 	runscript nodejs-install.sh	
 ;;
